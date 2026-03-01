@@ -1,8 +1,6 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: cave-app
     restart: unless-stopped
     environment:
@@ -10,42 +8,15 @@ services:
       - DATABASE_URL=sqlite:///./data/cave.db
     volumes:
       - cave-data:/app/data
+    expose:
+      - "8000"
     networks:
-      - cave-net
-
-  nginx:
-    image: nginx:alpine
-    container_name: cave-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d:ro
-      - certbot-www:/var/www/certbot:ro
-      - certbot-certs:/etc/letsencrypt:ro
-    depends_on:
-      - app
-    networks:
-      - cave-net
-
-  certbot:
-    image: certbot/certbot
-    container_name: cave-certbot
-    volumes:
-      - certbot-www:/var/www/certbot
-      - certbot-certs:/etc/letsencrypt
-    entrypoint: >
-      sh -c "trap exit TERM; while :; do
-        certbot renew --webroot -w /var/www/certbot --quiet;
-        sleep 12h & wait $${!};
-      done"
+      - proxy-net
 
 networks:
-  cave-net:
-    driver: bridge
+  proxy-net:
+    external: true
+    name: proxy-net
 
 volumes:
   cave-data:
-  certbot-www:
-  certbot-certs:
