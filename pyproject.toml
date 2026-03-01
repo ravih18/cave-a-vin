@@ -1,0 +1,12 @@
+[project]
+name = "cave-a-vin"
+version = "0.1.0"
+description = "Application de gestion de cave à vin"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.115.0",
+    "uvicorn[standard]==0.30.6",
+    "sqlalchemy==2.0.35",
+    "pydantic==2.9.2",
+    "jinja2==3.1.4",
+]

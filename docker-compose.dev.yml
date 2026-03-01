@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: cave-app-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - PIN_CODE=${PIN_CODE:-1234}
+      - DATABASE_URL=sqlite:///./data/cave.db
+    volumes:
+      - ./app:/app/app        # hot reload du code
+      - ./data:/app/data      # données locales
